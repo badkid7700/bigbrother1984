@@ -13,7 +13,12 @@ export default async function handler(req, res) {
     changePct = null,
     mcap = null,
     totalSupply = null,
-    holders = null;
+    holders = null,
+    vol24 = null,
+    buys24 = null,
+    sells24 = null,
+    buyers24 = null,
+    sellers24 = null;
 
   // Token endpoint — aggregated USD price, total supply (and market cap / FDV if present).
   try {
@@ -70,6 +75,15 @@ export default async function handler(req, res) {
           }
           const pct = a.price_change_percentage ? parseFloat(a.price_change_percentage.h24) : NaN;
           if (isFinite(pct)) changePct = pct;
+          const v = a.volume_usd ? parseFloat(a.volume_usd.h24) : NaN;
+          if (isFinite(v)) vol24 = v;
+          const tx = a.transactions && a.transactions.h24;
+          if (tx) {
+            if (isFinite(tx.buys)) buys24 = tx.buys;
+            if (isFinite(tx.sells)) sells24 = tx.sells;
+            if (isFinite(tx.buyers)) buyers24 = tx.buyers;
+            if (isFinite(tx.sellers)) sellers24 = tx.sellers;
+          }
           break;
         }
       }
@@ -90,6 +104,11 @@ export default async function handler(req, res) {
     marketCap: mcap,
     totalSupply,
     holders,
+    vol24,
+    buys24,
+    sells24,
+    buyers24,
+    sellers24,
     source: 'geckoterminal',
     asOf: Date.now(),
   });

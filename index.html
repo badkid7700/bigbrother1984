@@ -537,11 +537,13 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
   </div>
   <div class="grid2">
     <div class="cell"><div class="ck">TOTAL SUPPLY</div><div class="cv" id="supplyv">1,000,000,000</div><div class="cn">Read live from the chain. One billion units, every one of them numbered, every transfer on record forever.</div></div>
-    <div class="cell"><div class="ck">HELD BY THE TEAM</div><div class="cv"><span class="blk">0%</span></div><div class="cn">Declassify it. We'd rather you checked the chain than took our word.</div></div>
     <div class="cell"><div class="ck">LIQUIDITY</div><div class="cv"><span class="blk">Locked, LP burned</span></div><div class="cn">The keys were destroyed. Nobody can pull the floor out — not even us.</div></div>
     <div class="cell"><div class="ck">BUY / SELL TAX</div><div class="cv">0 / 0</div><div class="cn">We take nothing from your trades. We only take your data, like everyone else.</div></div>
     <div class="cell"><div class="ck">CIRCULATING</div><div class="cv"><span class="blk">100%</span></div><div class="cn">No vesting cliffs, no unlock calendar, no quiet dilution six months from now.</div></div>
     <div class="cell"><div class="ck">WALLETS ON RECORD</div><div class="cv" id="holders">—</div><div class="cn">Every one of them public, permanent, and searchable by anybody. Including them.</div></div>
+    <div class="cell"><div class="ck">BUYS / SELLS — 24H</div><div class="cv" id="bs24">—</div><div class="cn">Each order was logged the moment it happened. The intent behind it, we infer.</div></div>
+    <div class="cell"><div class="ck">VOLUME — 24H</div><div class="cv" id="vol24">—</div><div class="cn">Every dollar that moved through the pair in the last day. Followed the whole way.</div></div>
+    <div class="cell"><div class="ck">SUBJECTS ACTIVE — 24H</div><div class="cv" id="act24">—</div><div class="cn">Wallets seen trading in the last day. They know who they are. So do we.</div></div>
   </div>
 </section>
 
@@ -1069,8 +1071,8 @@ $('#rescan').addEventListener('click',function(){startScan();log('Manual re-scan
 document.addEventListener('visibilitychange',function(){visible=!document.hidden});
 
 /* ============ counters ============ */
-var c1=$('#c1'),c2=$('#c2'),c3=$('#c3'),c4=$('#c4'),holders=$('#holders');
-var base1=4318000+Math.floor(Math.random()*90000), base2=1984000000, hold=11840+Math.floor(Math.random()*400);
+var c1=$('#c1'),c2=$('#c2'),c3=$('#c3'),c4=$('#c4');
+var base1=4318000+Math.floor(Math.random()*90000), base2=1984000000;
 function abbr(n){
   if(n>=1e9)return String(parseFloat((n/1e9).toFixed(3)))+'B';
   if(n>=1e6)return String(parseFloat((n/1e6).toFixed(2)))+'M';
@@ -1087,9 +1089,7 @@ function paintCounters(){
 setInterval(function(){
   base1+=Math.floor(Math.random()*7)+1;
   paintCounters();
-  if(Math.random()<.05){hold+=1;holders.textContent=fmt(hold)}
 },900);
-holders.textContent=fmt(hold);
 paintCounters();
 
 /* ============ ministry ============ */
@@ -1489,7 +1489,7 @@ function bbFmtMcap(v){
   if(v>=1e3)return '$'+bbTrimZeros((v/1e3).toFixed(1))+'K';
   return '$'+v.toFixed(0);
 }
-var BBQ={price:null,pct:null,mcap:null,supply:null,holders:null,ok:false};
+var BBQ={price:null,pct:null,mcap:null,supply:null,holders:null,buys:null,sells:null,vol:null,act:null,ok:false};
 function bbRender(){
   var chip=document.getElementById('navbb');
   if(chip){
@@ -1514,6 +1514,12 @@ function bbRender(){
   if(sv&&BBQ.supply!=null)sv.textContent=Math.round(BBQ.supply).toLocaleString('en-US');
   var hv=document.getElementById('holders');
   if(hv&&BBQ.holders!=null)hv.textContent=Math.round(BBQ.holders).toLocaleString('en-US');
+  var bv=document.getElementById('bs24');
+  if(bv&&BBQ.buys!=null&&BBQ.sells!=null)bv.textContent=BBQ.buys+' / '+BBQ.sells;
+  var vv=document.getElementById('vol24');
+  if(vv&&BBQ.vol!=null)vv.textContent=bbFmtMcap(BBQ.vol);
+  var av=document.getElementById('act24');
+  if(av&&BBQ.act!=null)av.textContent=Math.round(BBQ.act).toLocaleString('en-US');
 }
 function bbFetch(){
   fetchJSON('/api/bb',5000).then(function(j){
@@ -1521,6 +1527,10 @@ function bbFetch(){
     BBQ.price=j.price; BBQ.pct=(j.changePct!=null)?j.changePct:null; BBQ.mcap=(j.marketCap!=null)?j.marketCap:null;
     if(j.totalSupply!=null)BBQ.supply=j.totalSupply;
     if(j.holders!=null)BBQ.holders=j.holders;
+    if(j.buys24!=null)BBQ.buys=j.buys24;
+    if(j.sells24!=null)BBQ.sells=j.sells24;
+    if(j.vol24!=null)BBQ.vol=j.vol24;
+    if(j.buyers24!=null||j.sellers24!=null)BBQ.act=(j.buyers24||0)+(j.sellers24||0);
     BBQ.ok=true; bbRender();
   })['catch'](function(){ BBQ.ok=false; bbRender(); });
 }
