@@ -522,7 +522,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
       <p class="big">The token trades against the company that does this for a living.</p>
     </div>
     <div class="paircopy">
-      <p style="max-width:62ch;color:rgba(242,230,205,.78)">Palantir builds the software that governments and insurers use to pull a thousand disconnected records into one picture of a person. That's the joke, and it's also the point: $BIGBROTHER is priced in the stock of the surveillance industry itself. When the watching business does well, so does the coin about being watched.</p>
+      <p style="max-width:62ch;color:rgba(242,230,205,.78)">Palantir builds the software that governments and insurers use to pull a thousand disconnected records into one picture of a person. We respect the workmanship. So we priced ourselves in it: $BIGBROTHER trades in the stock of the surveillance industry itself. When the watching business does well, so does the coin about being watched.</p>
       <p style="max-width:62ch;color:rgba(242,230,205,.78);margin-top:18px">It lives on Robinhood Chain — the tokenised-stock network — and trades directly against Palantir's on-chain Stock Token. The watchers' own equity, on-chain, as the very thing the coin is priced against.</p>
       <p style="max-width:62ch;color:rgba(242,230,205,.5);font-size:13px;margin-top:18px">Nothing here is issued by, endorsed by, or connected to Palantir Technologies Inc. or to Robinhood. It's a meme, pointed at a real thing.</p>
     </div>
@@ -537,8 +537,8 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
   </div>
   <div class="grid2">
     <div class="cell"><div class="ck">TOTAL SUPPLY</div><div class="cv" id="supplyv">1,000,000,000</div><div class="cn">Read live from the chain. One billion units, every one of them numbered, every transfer on record forever.</div></div>
-    <div class="cell"><div class="ck">LIQUIDITY</div><div class="cv"><span class="blk">Locked, LP burned</span></div><div class="cn">The keys were destroyed. Nobody can pull the floor out — not even us.</div></div>
-    <div class="cell"><div class="ck">BUY / SELL TAX</div><div class="cv">0 / 0</div><div class="cn">We take nothing from your trades. We only take your data, like everyone else.</div></div>
+    <div class="cell"><div class="ck">LIQUIDITY</div><div class="cv"><span class="blk">Held by the protocol</span></div><div class="cn">The pool lives inside the launchpad's contracts, not in our hands. A slice of every trade's fee is folded back into it. The floor thickens.</div></div>
+    <div class="cell"><div class="ck">TRADE FEE</div><div class="cv">≈1.5%</div><div class="cn">The apparatus collects on every trade. Part of every sale buys $BIGBROTHER back off the open market. Verified on-chain. Even leaving is taxed.</div></div>
     <div class="cell"><div class="ck">CIRCULATING</div><div class="cv"><span class="blk">100%</span></div><div class="cn">No vesting cliffs, no unlock calendar, no quiet dilution six months from now.</div></div>
     <div class="cell"><div class="ck">WALLETS ON RECORD</div><div class="cv" id="holders">—</div><div class="cn">Every one of them public, permanent, and searchable by anybody. Including them.</div></div>
     <div class="cell"><div class="ck">BUYS / SELLS — 24H</div><div class="cv" id="bs24">—</div><div class="cn">Each order was logged the moment it happened. The intent behind it, we infer.</div></div>
@@ -1159,12 +1159,12 @@ $('#copyca').addEventListener('click',function(){
     try{document.execCommand('copy')}catch(e){}ta.remove();after()}
 });
 Array.prototype.slice.call(document.querySelectorAll('[data-x]')).forEach(function(a){
-  a.addEventListener('click',function(e){e.preventDefault();toast('NOT YET','Social links go here. Replace the href when the accounts are live.')});
+  a.addEventListener('click',function(e){e.preventDefault();toast('NOT YET','This channel has not been activated. You will be informed when we decide you should be.')});
 });
 
 /* ============ ticker ============ */
 (function(){
-  var phrases=['BIG BROTHER IS WATCHING YOU','THEY WATCH','THEY TRACK','THEY RECORD','NO PERMISSION REQUIRED','$BIGBROTHER / PLTR','YOUR FILE IS OPEN','1,984,000,000 SUPPLY'];
+  var phrases=['BIG BROTHER IS WATCHING YOU','THEY WATCH','THEY TRACK','THEY RECORD','NO PERMISSION REQUIRED','$BIGBROTHER / PLTR','YOUR FILE IS OPEN','1,000,000,000 SUPPLY · EVERY UNIT NUMBERED'];
   var s='';
   for(var k=0;k<2;k++)for(var i=0;i<phrases.length;i++)s+=phrases[i]+'<i>◆</i>';
   $('#tickrow').innerHTML=s;
@@ -1418,7 +1418,7 @@ function renderCard(){
 }
 function issueDossier(){
   toast('COMPILING FILE','Rendering your dossier from what this page already saw. Nothing new is collected.');
-  var go=function(){ try{ renderCard(); }catch(e){ toast('RENDER FAILED','Your browser blocked the canvas export. Try a different browser.'); } };
+  var go=function(){ try{ renderCard(); }catch(e){ toast('RENDER FAILED','Your browser declined to cooperate. That has been noted. Try another.'); } };
   try{
     if(document.fonts&&document.fonts.load){
       document.fonts.load('400 82px "Archivo Black"'); document.fonts.load('500 22px "IBM Plex Mono"');
