@@ -121,6 +121,11 @@ nav .rec i{width:7px;height:7px;border-radius:50%;background:var(--red);animatio
 .watching{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:10px;letter-spacing:.28em;
   color:rgba(242,230,205,.62);z-index:3}
 .watching b{color:var(--cream);font-weight:600}
+/* on phones / short windows the hero content is tall enough to reach the pinned
+   status line, so let it flow under the buttons instead of overlapping them */
+@media (max-width:640px), (max-height:760px){
+  .watching{position:static;bottom:auto;margin-top:22px}
+}
 
 /* ---------- section frame ---------- */
 section{padding:clamp(46px,6vw,82px) var(--pad);position:relative}
@@ -289,10 +294,10 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
 .sndbtn:hover{border-color:var(--cream)}
 .sndbtn.on{border-color:var(--red);color:var(--red)}
 .sndbtn.on .si{color:var(--red);animation:blip 1s infinite}
-.navpltr{font-size:10px;letter-spacing:.1em;padding:5px 9px;border:1px solid var(--rule);color:var(--olive);font-variant-numeric:tabular-nums;white-space:nowrap}
-.navpltr.up{color:var(--red);border-color:rgba(207,36,24,.5)}
-.navpltr.down{color:var(--olive)}
-@media(max-width:700px){.navpltr{display:none!important}.sndbtn .sl{display:none}}
+.navpltr,.navbb{font-size:10px;letter-spacing:.1em;padding:5px 9px;border:1px solid var(--rule);color:var(--olive);font-variant-numeric:tabular-nums;white-space:nowrap}
+.navpltr.up,.navbb.up{color:var(--red);border-color:rgba(207,36,24,.5)}
+.navpltr.down,.navbb.down{color:var(--olive)}
+@media(max-width:700px){.navpltr,.navbb{display:none!important}.sndbtn .sl{display:none}}
 
 /* ---------- memory banner ---------- */
 .membanner{border:1px solid var(--red);background:rgba(207,36,24,.07);padding:12px 16px;margin:22px 0 0;
@@ -375,6 +380,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
   <span class="nl"><a href="#classified">Supply</a></span>
   <span class="nl"><a href="#ministry">Ministry</a></span>
   <span class="sp"></span>
+  <span class="navbb" id="navbb" style="display:none"></span>
   <span class="navpltr" id="navpltr" style="display:none"></span>
   <button class="sndbtn" id="sndbtn" aria-pressed="false" title="Toggle surveillance audio"><span class="si">◄))</span><span class="sl">SOUND OFF</span></button>
   <span class="rec"><i></i>REC</span>
@@ -427,7 +433,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
     <h1><span>Big</span><span>Brother</span></h1>
     <p class="tag"><b>They watch. They track. They record.</b><br>The surveillance state doesn't need your permission.</p>
     <div class="pair">PAIRED WITH <em>PLTR</em></div>
-    <div class="bbprice" id="bbprice" style="display:none"><span class="bbk">$BIGBROTHER</span> <b id="bbpriceval">—</b> <span class="bbchg" id="bbpricechg"></span></div>
+    <div class="bbprice" id="bbprice" style="display:none"><span class="bbk">$BIGBROTHER MARKET CAP</span> <b id="bbpriceval">—</b></div>
     <div class="cta">
       <a class="btn solid" href="https://meta.matcha.xyz/robinhood?buyToken=0x41bad95fd76dc3148e36cec38948688ffc1a1e18&amp;chainId=4663&amp;sellToken=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" target="_blank" rel="noopener">Buy $BIGBROTHER</a>
       <a class="btn" href="#acquire">How to buy</a>
@@ -1471,27 +1477,44 @@ function bbTrimZeros(str){
   if(str.charAt(i)==='.')i--;
   return str.slice(0,i+1);
 }
-function bbFmtPrice(v){
+function bbFmtNum(v){
   if(!isFinite(v)||v<=0)return '\u2014';
-  if(v>=1)return '$'+bbTrimZeros(v.toFixed(3));
-  return '$'+bbTrimZeros(v.toFixed(12));
+  if(v>=1)return bbTrimZeros(v.toFixed(3));
+  return bbTrimZeros(v.toFixed(12));
 }
-var BBQ={price:null,pct:null,ok:false};
+function bbFmtMcap(v){
+  if(!isFinite(v)||v<=0)return '\u2014';
+  if(v>=1e9)return '$'+bbTrimZeros((v/1e9).toFixed(2))+'B';
+  if(v>=1e6)return '$'+bbTrimZeros((v/1e6).toFixed(2))+'M';
+  if(v>=1e3)return '$'+bbTrimZeros((v/1e3).toFixed(1))+'K';
+  return '$'+v.toFixed(0);
+}
+var BBQ={price:null,pct:null,mcap:null,ok:false};
 function bbRender(){
+  var chip=document.getElementById('navbb');
+  if(chip){
+    if(!BBQ.ok){chip.style.display='none';}
+    else{
+      chip.style.display='';
+      var up=(BBQ.pct==null)?null:(BBQ.pct>=0);
+      chip.className='navbb'+(up==null?'':(up?' up':' down'));
+      chip.textContent='$BIGBROTHER '+bbFmtNum(BBQ.price)+(up==null?'':(up?' \u25b2':' \u25bc'));
+    }
+  }
   var box=document.getElementById('bbprice');
-  if(!box)return;
-  if(!BBQ.ok){box.style.display='none';return;}
-  box.style.display='';
-  var up=(BBQ.pct==null)?null:(BBQ.pct>=0);
-  box.className='bbprice'+(up==null?'':(up?' up':' down'));
-  var val=document.getElementById('bbpriceval'), chg=document.getElementById('bbpricechg');
-  if(val)val.textContent=bbFmtPrice(BBQ.price);
-  if(chg)chg.textContent=(BBQ.pct==null)?'':((up?'\u25b2 +':'\u25bc \u2212')+Math.abs(BBQ.pct).toFixed(1)+'%');
+  if(box){
+    if(!BBQ.ok||BBQ.mcap==null){box.style.display='none';}
+    else{
+      box.style.display='';
+      var val=document.getElementById('bbpriceval');
+      if(val)val.textContent=bbFmtMcap(BBQ.mcap);
+    }
+  }
 }
 function bbFetch(){
   fetchJSON('/api/bb',5000).then(function(j){
     if(!j||typeof j.price!=='number')throw new Error('bad');
-    BBQ.price=j.price; BBQ.pct=(j.changePct!=null)?j.changePct:null; BBQ.ok=true; bbRender();
+    BBQ.price=j.price; BBQ.pct=(j.changePct!=null)?j.changePct:null; BBQ.mcap=(j.marketCap!=null)?j.marketCap:null; BBQ.ok=true; bbRender();
   })['catch'](function(){ BBQ.ok=false; bbRender(); });
 }
 function bbInit(){ bbRender(); bbFetch(); setInterval(function(){ if(!document.hidden)bbFetch(); },45000); }
