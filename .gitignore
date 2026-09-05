@@ -1,0 +1,12 @@
+# macOS / tooling
+.DS_Store
+.claude/
+
+# local media & content assets — not part of the deployed site
+assets/
+*.mp4
+api/*.png
+
+# working docs & local tools
+BIGBROTHER_*.md
+clip-studio.html
