@@ -10,3 +10,8 @@ api/*.png
 # working docs & local tools
 BIGBROTHER_*.md
 clip-studio.html
+skills/
+
+# secrets & scout output — never commit
+.env
+reply_queue.csv
