@@ -536,7 +536,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
     <span class="meta">HOVER TO DECLASSIFY</span>
   </div>
   <div class="grid2">
-    <div class="cell"><div class="ck">TOTAL SUPPLY</div><div class="cv">1,984,000,000</div><div class="cn">One token for every year you'll be remembered, times a number that should feel familiar.</div></div>
+    <div class="cell"><div class="ck">TOTAL SUPPLY</div><div class="cv" id="supplyv">1,000,000,000</div><div class="cn">Read live from the chain. One billion units, every one of them numbered, every transfer on record forever.</div></div>
     <div class="cell"><div class="ck">HELD BY THE TEAM</div><div class="cv"><span class="blk">0%</span></div><div class="cn">Declassify it. We'd rather you checked the chain than took our word.</div></div>
     <div class="cell"><div class="ck">LIQUIDITY</div><div class="cv"><span class="blk">Locked, LP burned</span></div><div class="cn">The keys were destroyed. Nobody can pull the floor out — not even us.</div></div>
     <div class="cell"><div class="ck">BUY / SELL TAX</div><div class="cv">0 / 0</div><div class="cn">We take nothing from your trades. We only take your data, like everyone else.</div></div>
@@ -1489,7 +1489,7 @@ function bbFmtMcap(v){
   if(v>=1e3)return '$'+bbTrimZeros((v/1e3).toFixed(1))+'K';
   return '$'+v.toFixed(0);
 }
-var BBQ={price:null,pct:null,mcap:null,ok:false};
+var BBQ={price:null,pct:null,mcap:null,supply:null,holders:null,ok:false};
 function bbRender(){
   var chip=document.getElementById('navbb');
   if(chip){
@@ -1510,11 +1510,18 @@ function bbRender(){
       if(val)val.textContent=bbFmtMcap(BBQ.mcap);
     }
   }
+  var sv=document.getElementById('supplyv');
+  if(sv&&BBQ.supply!=null)sv.textContent=Math.round(BBQ.supply).toLocaleString('en-US');
+  var hv=document.getElementById('holders');
+  if(hv&&BBQ.holders!=null)hv.textContent=Math.round(BBQ.holders).toLocaleString('en-US');
 }
 function bbFetch(){
   fetchJSON('/api/bb',5000).then(function(j){
     if(!j||typeof j.price!=='number')throw new Error('bad');
-    BBQ.price=j.price; BBQ.pct=(j.changePct!=null)?j.changePct:null; BBQ.mcap=(j.marketCap!=null)?j.marketCap:null; BBQ.ok=true; bbRender();
+    BBQ.price=j.price; BBQ.pct=(j.changePct!=null)?j.changePct:null; BBQ.mcap=(j.marketCap!=null)?j.marketCap:null;
+    if(j.totalSupply!=null)BBQ.supply=j.totalSupply;
+    if(j.holders!=null)BBQ.holders=j.holders;
+    BBQ.ok=true; bbRender();
   })['catch'](function(){ BBQ.ok=false; bbRender(); });
 }
 function bbInit(){ bbRender(); bbFetch(); setInterval(function(){ if(!document.hidden)bbFetch(); },45000); }

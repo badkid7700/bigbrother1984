@@ -11,9 +11,11 @@ export default async function handler(req, res) {
   const H = { Accept: 'application/json' };
   let price = null,
     changePct = null,
-    mcap = null;
+    mcap = null,
+    totalSupply = null,
+    holders = null;
 
-  // Token endpoint — aggregated USD price (and market cap / FDV if present).
+  // Token endpoint — aggregated USD price, total supply (and market cap / FDV if present).
   try {
     const r = await fetch(
       `https://api.geckoterminal.com/api/v2/networks/${GT_NETWORK}/tokens/${BB_TOKEN}`,
@@ -27,7 +29,23 @@ export default async function handler(req, res) {
         if (isFinite(p) && p > 0) price = p;
         const mc = parseFloat(a.market_cap_usd != null ? a.market_cap_usd : a.fdv_usd);
         if (isFinite(mc)) mcap = mc;
+        const ts = parseFloat(a.normalized_total_supply);
+        if (isFinite(ts) && ts > 0) totalSupply = ts;
       }
+    }
+  } catch (e) {}
+
+  // Token info endpoint — holders count (GeckoTerminal refreshes this ~daily).
+  try {
+    const r = await fetch(
+      `https://api.geckoterminal.com/api/v2/networks/${GT_NETWORK}/tokens/${BB_TOKEN}/info`,
+      { headers: H }
+    );
+    if (r.ok) {
+      const j = await r.json();
+      const a = j && j.data && j.data.attributes;
+      const hc = a && a.holders && parseInt(a.holders.count, 10);
+      if (isFinite(hc) && hc > 0) holders = hc;
     }
   } catch (e) {}
 
@@ -70,6 +88,8 @@ export default async function handler(req, res) {
     change: prev != null ? price - prev : null,
     changePct,
     marketCap: mcap,
+    totalSupply,
+    holders,
     source: 'geckoterminal',
     asOf: Date.now(),
   });
