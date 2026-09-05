@@ -1337,10 +1337,10 @@ function drawCardEye(x,cx,cy,w){
   x.beginPath(); x.moveTo(cx-w,cy); x.quadraticCurveTo(cx,cy+h,cx+w,cy); x.quadraticCurveTo(cx,cy+h*1.35,cx-w,cy); x.closePath(); x.fill();
 }
 function renderCard(){
-  var W=1080,H=1350,cv=document.getElementById('dossierCard'); if(!cv)return;
+  var W=1080,H=1440,cv=document.getElementById('dossierCard'); if(!cv)return;
   cv.width=W; cv.height=H; var x=cv.getContext('2d');
   x.fillStyle='#cf2418'; x.fillRect(0,0,W,H);
-  var vg=x.createRadialGradient(W/2,470,140,W/2,470,940); vg.addColorStop(0,'rgba(74,12,7,0)'); vg.addColorStop(1,'rgba(58,3,0,0.55)');
+  var vg=x.createRadialGradient(W/2,470,140,W/2,470,1010); vg.addColorStop(0,'rgba(74,12,7,0)'); vg.addColorStop(1,'rgba(58,3,0,0.55)');
   x.fillStyle=vg; x.fillRect(0,0,W,H);
   x.fillStyle='#100c0a'; x.fillRect(0,0,W,64);
   x.textAlign='left'; x.fillStyle='#cf2418'; x.font='500 20px "IBM Plex Mono",monospace'; x.fillText('\u25cf CLASSIFIED',40,41);
@@ -1372,17 +1372,21 @@ function renderCard(){
     x.fillText(val,px+300,fy);
     fy+=50; x.strokeStyle='rgba(242,230,205,.08)'; x.beginPath(); x.moveTo(px+34,fy-24); x.lineTo(px+pw-34,fy-24); x.stroke();
   }
-  var by=py+ph+38;
-  x.fillStyle='#f2e6cd'; x.textAlign='left'; x.font='400 40px "Archivo Black",Impact,sans-serif'; x.fillText('$BIGBROTHER / PLTR',70,by+34);
-  var seedb=0; for(var s=0;s<subjectId.length;s++)seedb+=subjectId.charCodeAt(s);
+  var CA=(document.getElementById('cacode')&&document.getElementById('cacode').textContent.trim())||'0x41bad95fd76dc3148e36cec38948688ffc1a1e18';
+  var HANDLE='@BigBrotherOnRH', SITE='bigbrother1984.com';
+  var by=py+ph+40;
+  x.strokeStyle='rgba(242,230,205,.14)'; x.lineWidth=1; x.beginPath(); x.moveTo(70,by-16); x.lineTo(W-70,by-16); x.stroke();
+  x.fillStyle='#f2e6cd'; x.textAlign='left'; x.font='400 36px "Archivo Black",Impact,sans-serif'; x.fillText('$BIGBROTHER / PLTR',70,by+30);
+  var seedb=0; for(var s2=0;s2<subjectId.length;s2++)seedb+=subjectId.charCodeAt(s2);
   var rb=mulberry32(seedb||7); var cxp=W-70;
-  for(var k=0;k<46;k++){ var wdt=1+Math.floor(rb()*4); cxp-=wdt+2; x.globalAlpha=rb()>0.5?1:0.5; x.fillStyle='#f2e6cd'; x.fillRect(cxp,by+4,wdt,34); }
+  for(var k=0;k<46;k++){ var wdt=1+Math.floor(rb()*4); cxp-=wdt+2; x.globalAlpha=rb()>0.5?1:0.5; x.fillStyle='#f2e6cd'; x.fillRect(cxp,by+2,wdt,32); }
   x.globalAlpha=1;
-  x.fillStyle='rgba(242,230,205,.72)'; x.textAlign='left'; x.font='500 17px "IBM Plex Mono",monospace';
-  x.fillText('They watch. They track. They record.',70,by+72);
-  x.fillStyle='rgba(242,230,205,.45)'; x.font='500 14px "IBM Plex Mono",monospace';
-  x.fillText('The surveillance state doesn\u2019t need your permission.',70,by+98);
-  x.textAlign='right'; x.fillText('issued '+clock(),W-70,by+98);
+  x.fillStyle='rgba(242,230,205,.42)'; x.textAlign='left'; x.font='500 13px "IBM Plex Mono",monospace'; x.fillText('CONTRACT',70,by+74);
+  x.fillStyle='#9a9059'; x.font='500 18px "IBM Plex Mono",monospace'; x.fillText(CA,70,by+100);
+  x.fillStyle='#f2e6cd'; x.font='600 18px "IBM Plex Mono",monospace'; x.fillText(SITE,70,by+146);
+  x.textAlign='right'; x.fillStyle='#c2b884'; x.fillText(HANDLE,W-70,by+146);
+  x.textAlign='left'; x.fillStyle='rgba(242,230,205,.5)'; x.font='500 13px "IBM Plex Mono",monospace'; x.fillText('They watch. They track. They record.',70,by+182);
+  x.textAlign='right'; x.fillStyle='rgba(242,230,205,.4)'; x.fillText('issued '+clock(),W-70,by+182);
   cv.toBlob(function(blob){
     if(!blob)return;
     var url=URL.createObjectURL(blob);
