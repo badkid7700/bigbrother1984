@@ -86,6 +86,8 @@ nav .brand svg{width:20px;height:20px;display:block}
 nav .sp{flex:1}
 nav a{text-decoration:none;opacity:.62;transition:opacity .2s,color .2s}
 nav a:hover{opacity:1;color:var(--red)}
+nav a.brand{opacity:1;color:inherit}
+nav a.brand:hover{color:inherit}
 nav .rec{display:flex;align-items:center;gap:7px;color:var(--red)}
 nav .rec i{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blip 1.4s infinite}
 @keyframes blip{0%,45%{opacity:1}50%,100%{opacity:.15}}
@@ -383,10 +385,10 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
 </div>
 
 <nav>
-  <span class="brand">
+  <a class="brand" href="#" aria-label="Back to top">
     <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M2 32Q32 6 62 32Q32 58 2 32Z" fill="#f2e6cd"/><circle cx="32" cy="32" r="15" fill="#9a9059" stroke="#100c0a" stroke-width="4"/><circle cx="32" cy="32" r="6" fill="#100c0a"/></svg>
     BIG BROTHER
-  </span>
+  </a>
   <span class="nl"><a href="#file">Your file</a></span>
   <span class="nl"><a href="#pair">The pair</a></span>
   <span class="nl"><a href="#classified">Supply</a></span>
