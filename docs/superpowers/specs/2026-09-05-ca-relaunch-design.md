@@ -44,6 +44,13 @@ fetch fails, the site shows no address rather than a stale one.
   the 1,000,000,000 total supply figure, fee/liquidity copy all stay visible.
 - Dossier canvas prints `CONTRACT: WITHHELD`.
 
+### Marquee (both states)
+
+Bottom scrolling ticker drops `1,000,000,000 SUPPLY · EVERY UNIT NUMBERED` and
+`$BIGBROTHER / PLTR`; adds `BIG BROTHER IS WATCHING YOU`. Resulting rotation:
+WE WATCH · WE TRACK · WE RECORD · WE NEVER STOP · BIG BROTHER IS WATCHING YOU ·
+NO PERMISSION REQUIRED · YOUR FILE IS OPEN.
+
 ### Live state (ca present)
 
 - `#cacode` shows the CA; copy button copies it.
