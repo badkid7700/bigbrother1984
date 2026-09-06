@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ministry of Truth — $BIGBROTHER studio</title>
+<meta name="description" content="Manufacture the truth. Post it. Big Brother is watching you.">
+<meta property="og:title" content="Ministry of Truth — $BIGBROTHER studio">
+<meta property="og:description" content="Manufacture the truth. Post it. Big Brother is watching you.">
+<meta property="og:url" content="https://www.bigbrother1984.com/studio">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23cf2418'/%3E%3Cpath d='M6 32 Q32 8 58 32 Q32 56 6 32Z' fill='%23f2e6cd'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%239a9059' stroke='%23100c0a' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23100c0a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#cf2418; --red-deep:#6e120b; --red-dark:#3a0603;
+  --cream:#f2e6cd; --ink:#0f0b0a; --ink-2:#171210; --olive:#9a9059;
+  --rule:rgba(242,230,205,.16); --rule-soft:rgba(242,230,205,.09);
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --display:'Archivo Black',Impact,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.55}
+::selection{background:var(--red);color:var(--cream)}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:-.01em;margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+header{display:flex;align-items:center;gap:12px;padding:14px clamp(16px,4vw,34px);border-bottom:1px solid var(--rule);position:sticky;top:0;background:rgba(15,11,10,.86);backdrop-filter:blur(6px);z-index:5}
+header svg{width:26px;height:26px;display:block;flex:0 0 auto}
+header .t{font-family:var(--display);font-size:16px;letter-spacing:0}
+header .s{margin-left:auto;font-size:11px;letter-spacing:.14em;color:rgba(242,230,205,.5)}
+@media(max-width:620px){header .s{display:none}}
+
+.wrap{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(18px,3vw,34px);padding:clamp(18px,4vw,34px);align-items:start;max-width:1180px;margin:0 auto}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+
+/* controls */
+.panel{border:1px solid var(--rule);background:var(--ink-2)}
+.panel .ph{padding:9px 14px;border-bottom:1px solid var(--rule);font-size:10px;letter-spacing:.2em;color:rgba(242,230,205,.55);display:flex;align-items:center;gap:8px}
+.panel .ph .dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.pad{padding:14px}
+label.f{display:block;font-size:10px;letter-spacing:.16em;color:rgba(242,230,205,.5);margin:0 0 6px}
+textarea{width:100%;min-height:74px;resize:vertical;background:var(--ink);border:1px solid var(--rule);color:var(--cream);padding:11px;font-size:15px;line-height:1.4}
+input[type=text]{width:100%;background:var(--ink);border:1px solid var(--rule);color:var(--cream);padding:10px 11px;font-size:13px}
+textarea::placeholder,input::placeholder{color:rgba(242,230,205,.32)}
+.hint{font-size:11px;color:rgba(242,230,205,.4);margin-top:6px}
+
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.presets button{background:transparent;border:1px solid var(--rule);color:rgba(242,230,205,.82);padding:6px 9px;font-size:11px;letter-spacing:.02em;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.presets button:hover{border-color:var(--cream)}
+
+.seg{display:flex;border:1px solid var(--rule)}
+.seg button{flex:1;background:transparent;border:0;border-right:1px solid var(--rule);color:rgba(242,230,205,.6);padding:9px 4px;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:background .15s,color .15s}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--red);color:var(--cream)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.field{margin-top:14px}
+
+.actions{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;padding:13px;border:1px solid var(--cream);background:transparent;color:var(--cream);font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .16s,color .16s,border-color .16s}
+.btn:hover:not(:disabled){background:var(--cream);color:var(--ink)}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--cream)}
+.btn.primary:hover:not(:disabled){background:var(--cream);color:var(--red);border-color:var(--cream)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn .rd{width:9px;height:9px;border-radius:50%;background:currentColor}
+
+.status{margin-top:12px;font-size:11px;letter-spacing:.06em;color:rgba(242,230,205,.55);min-height:1.3em}
+.status.warn{color:var(--red)}
+.note{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft);font-size:11px;line-height:1.6;color:rgba(242,230,205,.42)}
+.note b{color:rgba(242,230,205,.7);font-weight:600}
+
+/* stage */
+.stage{position:sticky;top:76px}
+.canvas-hold{border:1px solid var(--rule);background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+canvas{display:block;max-width:100%;max-height:74vh;height:auto;width:auto}
+.recdot{position:absolute;top:10px;left:12px;display:none;align-items:center;gap:7px;font-size:11px;letter-spacing:.16em;color:var(--red);z-index:2}
+.recdot i{width:9px;height:9px;border-radius:50%;background:var(--red);animation:bl .9s infinite}
+.recdot.on{display:flex}
+@keyframes bl{0%,45%{opacity:1}50%,100%{opacity:.15}}
+
+.result{margin-top:14px;border:1px solid var(--rule);background:var(--ink-2);display:none}
+.result.on{display:block}
+.result .ph{padding:9px 14px;border-bottom:1px solid var(--rule);font-size:10px;letter-spacing:.2em;color:rgba(242,230,205,.55);display:flex;align-items:center;gap:10px}
+.result .ph a{margin-left:auto;color:var(--red);text-decoration:none;letter-spacing:.16em}
+.result .ph a:hover{color:var(--cream)}
+.result video{display:block;width:100%;max-height:60vh;background:#000}
+.fmtbadge{font-size:10px;letter-spacing:.14em;padding:3px 8px;border:1px solid var(--rule);color:rgba(242,230,205,.6)}
+.fmtbadge.ok{color:var(--olive);border-color:rgba(154,144,89,.5)}
+.fmtbadge.warn{color:var(--red);border-color:rgba(207,36,24,.5)}
+.tips{font-size:11px;color:rgba(242,230,205,.45);padding:11px 14px;line-height:1.6}
+.sharerow{display:flex;gap:10px;flex-wrap:wrap;padding:12px 14px 0}
+.sharebig{flex:1;min-width:140px;text-align:center;background:var(--red);color:var(--cream);border:1px solid var(--red);
+  padding:12px 16px;font-family:var(--display);font-size:13px;letter-spacing:.04em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer}
+.sharebig:hover{background:var(--cream);color:var(--red);border-color:var(--cream)}
+.tick{border-top:1px solid var(--rule);background:var(--red);color:var(--cream);overflow:hidden;white-space:nowrap;padding:10px 0;margin-top:34px}
+.tick .tr2{display:inline-block;animation:tickmove 34s linear infinite;font-family:var(--display);font-size:13px;letter-spacing:.06em}
+.tick .tr2 i{font-style:normal;opacity:.45;margin:0 18px}
+@keyframes tickmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" aria-label="Back to Big Brother" style="display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M2 32Q32 6 62 32Q32 58 2 32Z" fill="#f2e6cd"/><circle cx="32" cy="32" r="15" fill="#9a9059" stroke="#100c0a" stroke-width="4"/><circle cx="32" cy="32" r="6" fill="#100c0a"/></svg>
+    <span class="t">Ministry of Truth</span>
+  </a>
+  <span class="s">PRODUCE YOUR OWN BROADCAST · $BIGBROTHER</span>
+</header>
+
+<div class="wrap">
+  <!-- CONTROLS -->
+  <div class="panel">
+    <div class="ph"><span class="dot"></span>COMPOSE</div>
+    <div class="pad">
+      <label class="f" for="line">Message</label>
+      <textarea id="line" maxlength="140" placeholder="Type the line…">We already have a file on you.</textarea>
+      <div class="hint">Short and blunt reads best. Keep it under ~10 words.</div>
+
+      <div class="field">
+        <label class="f">Or pull a line</label>
+        <div class="presets" id="presets"></div>
+      </div>
+
+      <div class="field">
+        <label class="f" for="sub">Closing line</label>
+        <input type="text" id="sub" maxlength="60" value="bigbrother1984.com">
+      </div>
+
+      <div class="row">
+        <div>
+          <label class="f">Format</label>
+          <div class="seg" id="fmt">
+            <button data-w="1080" data-h="1920" class="on">9:16</button>
+            <button data-w="1080" data-h="1080">1:1</button>
+            <button data-w="1920" data-h="1080">16:9</button>
+          </div>
+        </div>
+        <div>
+          <label class="f">Length</label>
+          <div class="seg" id="dur">
+            <button data-d="6">6s</button>
+            <button data-d="8" class="on">8s</button>
+            <button data-d="10">10s</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="preview">▶ Preview</button>
+        <button class="btn primary" id="record"><span class="rd"></span> Record &amp; download</button>
+        <button class="btn" id="stop" disabled>■ Stop</button>
+      </div>
+
+      <div class="status" id="status">Ready. Preview it, then record.</div>
+
+      <div class="note" id="note">
+        <b>Audio is baked in</b> — the surveillance drone records with the video. Use headphones to hear the preview.<br><br>
+        X and TikTok need <b>MP4</b>. Safari (incl. iPhone) and newer Chrome/Edge export MP4 directly; if a clip downloads as <b>.webm</b>, convert it before posting — the clip card tells you which you got. If your browser can't record at all, hit Preview and screen-record instead.
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE -->
+  <div class="stage">
+    <div class="canvas-hold">
+      <canvas id="c" width="1080" height="1920"></canvas>
+      <span class="recdot" id="recdot"><i></i>REC</span>
+    </div>
+
+    <div class="result" id="result">
+      <div class="ph"><span>YOUR CLIP</span><span id="fmtbadge" class="fmtbadge"></span><a id="dl" download="bigbrother-clip.mp4" href="#">↓ Download</a></div>
+      <video id="resultVid" controls playsinline></video>
+      <div class="sharerow">
+        <button type="button" id="sharebtn" class="sharebig" style="display:none">Share clip</button>
+        <a id="xbtn" class="sharebig" href="#" target="_blank" rel="noopener">Post on X</a>
+      </div>
+      <div class="tips" id="tips">Download, then upload to X, TikTok, Reels, or Shorts.</div>
+    </div>
+  </div>
+</div>
+
+<div class="tick"><span class="tr2" id="tickrow"></span></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var C=$('#c'), X=C.getContext('2d');
+
+/* ---------- palette ---------- */
+var RED='#cf2418', RED_DEEP='#6e120b', CREAM='#f2e6cd', OLIVE='#9a9059', INK='#0a0806';
+
+/* ---------- config ---------- */
+var cfg={W:1080,H:1920,dur:8,line:'',sub:''};
+
+/* ---------- presets ---------- */
+var PRESETS=[
+ 'Big Brother is watching you.',
+ 'We watch. We track. We record.',
+ 'We never stop.',
+ 'We already have a file on you.',
+ 'cute VPN.',
+ 'You turned on incognito. Adorable.',
+ "The surveillance state doesn't need your permission.",
+ 'You opened this in another tab. We saw.',
+ "We're not angry. We're just writing it down.",
+ 'Your file is open.',
+ "You don't hold $BIGBROTHER yet. We logged the hesitation."
+];
+(function(){
+  var box=$('#presets');
+  PRESETS.forEach(function(p){
+    var b=document.createElement('button');
+    b.type='button'; b.textContent=p.length>34?p.slice(0,32)+'…':p;
+    b.title=p;
+    b.addEventListener('click',function(){ $('#line').value=p; drawStatic(); });
+    box.appendChild(b);
+  });
+})();
+
+/* ---------- deterministic lash geometry (stable across frames) ---------- */
+var LASH=[];
+(function(){
+  var s=1984;
+  function rnd(){ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; }
+  for(var i=0;i<132;i++){ var j=rnd(); LASH.push([(i/132)*Math.PI*2, j]); }
+})();
+
+/* ---------- noise tile for grain ---------- */
+var NOISE=document.createElement('canvas'); NOISE.width=NOISE.height=160;
+(function(){
+  var n=NOISE.getContext('2d'), img=n.createImageData(160,160), d=img.data;
+  for(var i=0;i<d.length;i+=4){ var v=Math.random()*255; d[i]=d[i+1]=d[i+2]=v; d[i+3]=255; }
+  n.putImageData(img,0,0);
+})();
+var noisePat=X.createPattern(NOISE,'repeat');
+
+/* ---------- helpers ---------- */
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function lerp(a,b,t){return a+(b-a)*t;}
+function smooth(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function easeOut(t){return 1-Math.pow(1-clamp(t,0,1),3);}
+
+function wrapLines(text,maxW,font){
+  X.font=font;
+  var words=(text||'').split(/\s+/), lines=[], cur='';
+  for(var i=0;i<words.length;i++){
+    var test=cur?cur+' '+words[i]:words[i];
+    if(X.measureText(test).width>maxW && cur){ lines.push(cur); cur=words[i]; }
+    else cur=test;
+  }
+  if(cur)lines.push(cur);
+  return lines;
+}
+
+/* ---------- the eye ---------- */
+function drawEye(cx,cy,ew,open,dilate,lookX,lookY){
+  var eh=ew*0.62;
+  // lashes
+  for(var i=0;i<LASH.length;i++){
+    var a=LASH[i][0], j=LASH[i][1];
+    var ix=cx+Math.cos(a)*(ew*1.03), iy=cy+Math.sin(a)*(eh*1.03);
+    var R=ew*(1.24+j*0.26), ox=cx+Math.cos(a)*R, oy=cy+Math.sin(a)*R*0.9;
+    X.strokeStyle='rgba(18,7,4,'+(0.5+j*0.42).toFixed(2)+')';
+    X.lineWidth=ew*(0.006+j*0.012); X.lineCap='round';
+    X.beginPath(); X.moveTo(ix,iy); X.lineTo(ox,oy); X.stroke();
+  }
+  // almond path
+  function almond(){ X.beginPath(); X.moveTo(cx-ew,cy); X.quadraticCurveTo(cx,cy-eh,cx+ew,cy); X.quadraticCurveTo(cx,cy+eh,cx-ew,cy); X.closePath(); }
+  almond(); X.fillStyle=CREAM; X.fill();
+  // eyeball clipped
+  X.save(); almond(); X.clip();
+  var ir=ew*0.5, gx=cx+lookX, gy=cy+lookY;
+  var g=X.createRadialGradient(gx-ir*0.3,gy-ir*0.35,ir*0.2,gx,gy,ir);
+  g.addColorStop(0,'#b6ab72'); g.addColorStop(0.5,'#877e4c'); g.addColorStop(1,'#211e11');
+  X.fillStyle=g; X.beginPath(); X.arc(gx,gy,ir,0,6.2832); X.fill();
+  X.lineWidth=ew*0.06; X.strokeStyle=INK; X.beginPath(); X.arc(gx,gy,ir,0,6.2832); X.stroke();
+  var pr=ew*(0.15+0.13*dilate);
+  X.fillStyle='#0a0806'; X.beginPath(); X.arc(gx,gy,pr,0,6.2832); X.fill();
+  X.fillStyle='rgba(242,230,205,0.16)'; X.beginPath(); X.arc(gx-pr*0.5,gy-pr*0.6,pr*0.32,0,6.2832); X.fill();
+  // lids close over the eyeball based on open (1=open,0=shut)
+  var gap=eh*clamp(open,0,1);
+  X.fillStyle=RED_DEEP;
+  X.fillRect(cx-ew-2, cy-eh-2, ew*2+4, (eh-gap)+2);       // top lid
+  X.fillRect(cx-ew-2, cy+gap, ew*2+4, (eh-gap)+2);        // bottom lid
+  X.restore();
+  // crease highlight when nearly shut
+  if(open<0.14){ X.strokeStyle='rgba(58,6,3,.9)'; X.lineWidth=ew*0.03; X.beginPath(); X.moveTo(cx-ew,cy); X.quadraticCurveTo(cx,cy+4,cx+ew,cy); X.stroke(); }
+}
+
+/* ---------- background dressing ---------- */
+function background(t){
+  var W=cfg.W,H=cfg.H;
+  // red base with a faint vertical sheen
+  X.fillStyle=RED; X.fillRect(0,0,W,H);
+  var vg=X.createRadialGradient(W/2,H*0.34,H*0.1,W/2,H*0.5,H*0.75);
+  vg.addColorStop(0,'rgba(58,6,3,0)'); vg.addColorStop(1,'rgba(40,3,0,.62)');
+  X.fillStyle=vg; X.fillRect(0,0,W,H);
+  // scanlines
+  X.globalAlpha=.16; X.fillStyle='#000';
+  for(var y=0;y<H;y+=3){ X.fillRect(0,y,W,1); }
+  X.globalAlpha=1;
+  // drifting grain
+  if(noisePat){ X.save(); X.globalAlpha=.05; X.translate((t*37)%160-160,(t*23)%160-160); X.fillStyle=noisePat; X.fillRect(0,0,W+160,H+160); X.restore(); }
+}
+
+function hud(tp){
+  var W=cfg.W,H=cfg.H, m=Math.round(W*0.033);
+  var fs=Math.round(W*0.018);
+  X.textAlign='left'; X.textBaseline='alphabetic';
+  X.font='500 '+fs+'px "IBM Plex Mono",monospace';
+  // REC + timestamp
+  X.fillStyle=RED; X.fillText('\u25cf REC',m,m+fs);
+  var secs=Math.floor(tp*cfg.dur*4)%60, mins=Math.floor(tp*cfg.dur*4/60)%60;
+  var ts=('0'+ (10+mins)).slice(-2)+':'+('0'+ (secs)).slice(-2)+':'+('0'+(Math.floor(tp*30)%60)).slice(-2);
+  X.textAlign='right'; X.fillStyle='rgba(242,230,205,.62)'; X.fillText(ts+'  \u00b7  LIVE',W-m,m+fs);
+  // brackets (corner ticks)
+  var b=Math.round(W*0.03), o=Math.round(W*0.02);
+  X.strokeStyle='rgba(207,36,24,.7)'; X.lineWidth=Math.max(1,W*0.0016);
+  function corner(x,y,dx,dy){ X.beginPath(); X.moveTo(x+dx*b,y); X.lineTo(x,y); X.lineTo(x,y+dy*b); X.stroke(); }
+  corner(o,o,1,1); corner(W-o,o,-1,1); corner(o,H-o,1,-1); corner(W-o,H-o,-1,-1);
+  // persistent handle, bottom center-ish (so every frame is branded)
+  X.textAlign='center'; X.font='500 '+Math.round(W*0.02)+'px "IBM Plex Mono",monospace';
+  X.fillStyle='rgba(242,230,205,.5)'; X.fillText('@BigBrotherOnRH',W/2,H-Math.round(H*0.03));
+}
+
+/* ---------- the frame ---------- */
+function frame(tp){        // tp in 0..1 over the clip
+  var W=cfg.W,H=cfg.H;
+  background(tp*cfg.dur);
+
+  // eye
+  var eyeCx=W/2, eyeCy=H*(cfg.H>=cfg.W? 0.28 : 0.30);
+  var ew=Math.min(W*0.30, H*0.20);
+  var MIN=Math.min(W,H), eyeBottom=eyeCy+ew*1.2, contentCY=(eyeBottom + H*0.90)/2;
+  var open=eyeOpenAt(tp), dil=clamp((tp-0.14)/0.3,0,1)*0.55+0.2;
+  var lookX=Math.sin(tp*6.28*0.6)*ew*0.05, lookY=Math.cos(tp*6.28*0.5)*ew*0.03;
+  drawEye(eyeCx,eyeCy,ew,open,dil,lookX,lookY);
+
+  // scan sweep during intro
+  if(tp>0.05 && tp<0.22){
+    var sp=(tp-0.05)/0.17; var sy=lerp(H*0.06,H*0.94,sp);
+    var grd=X.createLinearGradient(0,sy-40,0,sy+40);
+    grd.addColorStop(0,'rgba(207,36,24,0)'); grd.addColorStop(.5,'rgba(207,36,24,.5)'); grd.addColorStop(1,'rgba(207,36,24,0)');
+    X.fillStyle=grd; X.fillRect(0,sy-40,W,80);
+  }
+
+  // MAIN LINE
+  var textStart=0.15, textFull=0.30, holdEnd=0.70, gone=0.80;
+  var mA;
+  if(tp<textStart) mA=0;
+  else if(tp<textFull) mA=easeOut((tp-textStart)/(textFull-textStart));
+  else if(tp<holdEnd) mA=1;
+  else if(tp<gone) mA=1-smooth((tp-holdEnd)/(gone-holdEnd));
+  else mA=0;
+
+  if(mA>0.001){
+    var mfs=Math.round(MIN*0.082);
+    var font='400 '+mfs+'px "Archivo Black",Impact,sans-serif';
+    var lines=wrapLines((cfg.line||'').toUpperCase(),W*0.86,font);
+    var lh=mfs*1.04;
+    var baseY=contentCY - (lines.length-1)*lh/2 + mfs*0.22;
+    X.textAlign='center'; X.font=font;
+    for(var i=0;i<lines.length;i++){
+      var la=clamp(mA*1.4 - i*0.14,0,1);
+      var rise=(1-easeOut(la))*mfs*0.5;
+      X.globalAlpha=la;
+      // shadow slab for legibility
+      X.fillStyle='rgba(40,3,0,.55)';
+      X.fillText(lines[i],W/2+Math.round(W*0.004),baseY+i*lh+Math.round(W*0.004)-rise);
+      X.fillStyle=CREAM;
+      X.fillText(lines[i],W/2,baseY+i*lh-rise);
+    }
+    X.globalAlpha=1;
+  }
+
+  // BRAND OUTRO
+  var bStart=0.76, bFull=0.9;
+  var bA = tp<bStart?0: easeOut((tp-bStart)/(bFull-bStart));
+  if(bA>0.001){
+    X.globalAlpha=clamp(bA,0,1);
+    var t1=Math.round(MIN*0.10);
+    var y=contentCY - MIN*0.014;
+    X.textAlign='center';
+    X.font='400 '+t1+'px "Archivo Black",Impact,sans-serif';
+    X.fillStyle=CREAM; X.fillText('$BIGBROTHER',W/2,y);
+    var t2=Math.round(MIN*0.026);
+    X.font='500 '+t2+'px "IBM Plex Mono",monospace';
+    X.fillStyle=RED; X.fillText('PAIRED WITH PLTR',W/2,y+t2*2.0);
+    X.fillStyle='rgba(242,230,205,.85)'; X.fillText((cfg.sub||'bigbrother1984.com'),W/2,y+t2*3.6);
+    X.globalAlpha=1;
+  }
+
+  hud(tp);
+}
+
+function eyeOpenAt(tp){
+  var base=smooth(clamp((tp-0.02)/0.10,0,1));
+  base*=(1-blinkAt(tp,0.44))*(1-blinkAt(tp,0.62));
+  return clamp(base,0,1);
+}
+function blinkAt(tp,c){ var w=0.028,d=Math.abs(tp-c); return d<w?(1-d/w):0; }
+
+/* ---------- static preview (first meaningful frame) ---------- */
+function readCfg(){
+  cfg.line=$('#line').value.trim();
+  cfg.sub=$('#sub').value.trim();
+}
+function drawStatic(){ readCfg(); frame(0.5); }
+
+/* ---------- audio ---------- */
+var actx=null, master=null, streamDest=null, tickTimer=null, built=false;
+function ensureAudio(){
+  if(actx) { if(actx.state==='suspended')actx.resume(); return true; }
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC)return false;
+    actx=new AC();
+    master=actx.createGain(); master.gain.value=0.9; master.connect(actx.destination);
+    var filt=actx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=300; filt.Q.value=7; filt.connect(master);
+    var dg=actx.createGain(); dg.gain.value=0.14; dg.connect(filt);
+    [55,55.35,82.5].forEach(function(f,i){ var o=actx.createOscillator(); o.type=i===2?'sine':'sawtooth'; o.frequency.value=f; o.connect(dg); o.start(); });
+    var lfo=actx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.06;
+    var lg=actx.createGain(); lg.gain.value=130; lfo.connect(lg); lg.connect(filt.frequency); lfo.start();
+    built=true;
+    return true;
+  }catch(e){ actx=null; return false; }
+}
+function tick(vol){
+  if(!actx||!master)return;
+  try{
+    var t=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+    o.type='square'; o.frequency.value=1700+Math.random()*500;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime((vol||0.3)*0.2,t+0.001);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.07);
+  }catch(e){}
+}
+function stinger(){
+  if(!actx||!master)return;
+  try{
+    var t=actx.currentTime, o=actx.createOscillator(), g=actx.createGain(), f=actx.createBiquadFilter();
+    o.type='sawtooth'; o.frequency.setValueAtTime(120,t); o.frequency.exponentialRampToValueAtTime(38,t+0.5);
+    f.type='lowpass'; f.frequency.value=400;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.7);
+    o.connect(f); f.connect(g); g.connect(master); o.start(t); o.stop(t+0.75);
+  }catch(e){}
+}
+
+/* ---------- timeline runner ---------- */
+var raf=null, running=false, mode='idle', t0=0, firedText=false, firedBrand=false, lastTick=0;
+function runTimeline(record){
+  readCfg();
+  running=true; mode=record?'record':'preview';
+  t0=performance.now(); firedText=false; firedBrand=false; lastTick=0;
+  setButtons();
+  loop();
+}
+function loop(){
+  if(!running)return;
+  var el=(performance.now()-t0)/1000;
+  var tp=el/cfg.dur;
+  if(tp>=1){
+    frame(1);
+    if(mode==='record'){ finishRecordSoon(); }
+    else { // loop preview
+      t0=performance.now(); firedText=false; firedBrand=false;
+      raf=requestAnimationFrame(loop); return;
+    }
+    return;
+  }
+  frame(tp);
+  // audio cues
+  if(actx){
+    // geiger, denser during intro scan
+    var rate = (tp<0.22? 0.5 : 0.14);
+    if(el-lastTick>0.08 && Math.random()<rate){ tick(tp<0.22?0.22:0.12); lastTick=el; }
+    if(!firedText && tp>=0.15){ stinger(); firedText=true; }
+    if(!firedBrand && tp>=0.76){ stinger(); firedBrand=true; }
+  }
+  raf=requestAnimationFrame(loop);
+}
+function stopTimeline(){
+  running=false; if(raf)cancelAnimationFrame(raf); raf=null;
+  if(mode==='record' && rec && rec.state!=='inactive'){ try{rec.stop();}catch(e){} }
+  mode='idle'; setButtons(); $('#recdot').classList.remove('on');
+  drawStatic();
+  setStatus('Ready. Preview it, then record.');
+}
+
+/* ---------- recording ---------- */
+var rec=null, chunks=[];
+function pickMime(){
+  if(!window.MediaRecorder)return '';
+  var list=['video/mp4;codecs=avc1.64003E,mp4a.40.2','video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  for(var i=0;i<list.length;i++){ try{ if(MediaRecorder.isTypeSupported(list[i]))return list[i]; }catch(e){} }
+  return '';
+}
+function canRecord(){ return !!(C.captureStream && window.MediaRecorder && pickMime()); }
+function startRecord(){
+  readCfg();
+  if(!cfg.line){ setStatus('Add a message first.',true); return; }
+  if(!ensureAudio()){ setStatus('Audio blocked — preview + screen-record instead.',true); }
+  if(!canRecord()){ setStatus("This browser can't record directly. Use Preview, then screen-record.",true); runTimeline(false); return; }
+  var mime=pickMime();
+  var vStream=C.captureStream(30);
+  var mixed=new MediaStream();
+  vStream.getVideoTracks().forEach(function(tk){ mixed.addTrack(tk); });
+  if(actx){
+    try{ streamDest=actx.createMediaStreamDestination(); master.connect(streamDest);
+      streamDest.stream.getAudioTracks().forEach(function(tk){ mixed.addTrack(tk); }); }catch(e){}
+  }
+  chunks=[];
+  try{ rec=new MediaRecorder(mixed,{mimeType:mime, videoBitsPerSecond:9000000}); }
+  catch(e){ setStatus("Recorder failed to start. Use Preview + screen-record.",true); return; }
+  rec.ondataavailable=function(e){ if(e.data&&e.data.size)chunks.push(e.data); };
+  rec.onstop=finishRecord;
+  rec.start();
+  $('#recdot').classList.add('on');
+  setStatus('Recording '+cfg.dur+'s… hold on.');
+  runTimeline(true);
+}
+function finishRecordSoon(){
+  // let the last frame flush, then stop
+  running=false;
+  setTimeout(function(){ if(rec && rec.state!=='inactive'){ try{rec.stop();}catch(e){} } }, 120);
+}
+function finishRecord(){
+  $('#recdot').classList.remove('on');
+  try{ if(streamDest){ master.disconnect(streamDest); streamDest=null; } }catch(e){}
+  mode='idle'; setButtons();
+  if(!chunks.length){ setStatus('Nothing captured — try Preview + screen-record.',true); return; }
+  var type=(rec&&rec.mimeType)||'video/webm';
+  var blob=new Blob(chunks,{type:type});
+  var url=URL.createObjectURL(blob);
+  var ext=type.indexOf('mp4')>-1?'mp4':'webm';
+  var v=$('#resultVid'), a=$('#dl');
+  v.src=url; a.href=url; a.download='bigbrother-clip.'+ext;
+  setupShare(blob, ext);
+  var badge=$('#fmtbadge'), tips=$('#tips');
+  if(ext==='mp4'){
+    badge.textContent='MP4 \u00b7 H.264'; badge.className='fmtbadge ok';
+    tips.textContent='Ready to post \u2014 X, TikTok, Reels, and Shorts all take MP4. \u201cPost on X\u201d opens the caption; attach the downloaded clip to it.';
+  }else{
+    badge.textContent='WEBM \u00b7 convert first'; badge.className='fmtbadge warn';
+    tips.innerHTML='This came out as WebM, which <b>X and TikTok reject</b>. Convert to MP4 first \u2014 drop it into <b>HandBrake</b> (free, handbrake.fr) or <b>cloudconvert.com</b>, or re-record in <b>Safari / on iPhone</b>, which exports MP4 directly. Then post.';
+  }
+  $('#result').classList.add('on');
+  setStatus(ext==='mp4' ? 'Done \u2014 MP4 ready to post. \ud83d\udc41' : 'Done \u2014 but it\u2019s WebM; convert to MP4 before posting (see below).', ext!=='mp4');
+  drawStatic();
+  try{ v.scrollIntoView({behavior:'smooth',block:'nearest'}); }catch(e){}
+}
+
+/* ---------- share flow ---------- */
+var XCAPTION='Big Brother is watching you. $BIGBROTHER @BigBrotherOnRH bigbrother1984.com';
+function setupShare(blob, ext){
+  var xb=$('#xbtn');
+  xb.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(XCAPTION);
+  var sb=$('#sharebtn');
+  var file=null;
+  try{ file=new File([blob],'bigbrother-clip.'+ext,{type:blob.type}); }catch(e){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){
+    sb.style.display='';
+    sb.onclick=function(){
+      navigator.share({files:[file], text:XCAPTION})
+        .then(function(){ setStatus('The Ministry thanks you for your contribution.'); })
+        ['catch'](function(){ /* user closed the sheet — not an error */ });
+    };
+  }else{
+    sb.style.display='none';
+  }
+}
+
+/* ---------- ui plumbing ---------- */
+function setStatus(m,warn){ var s=$('#status'); s.textContent=m; s.className='status'+(warn?' warn':''); }
+function setButtons(){
+  var busy=running;
+  $('#preview').disabled=busy;
+  $('#record').disabled=busy;
+  $('#stop').disabled=!busy;
+}
+$('#preview').addEventListener('click',function(){ ensureAudio(); runTimeline(false); setStatus('Previewing… (loops until you stop)'); });
+$('#record').addEventListener('click',startRecord);
+$('#stop').addEventListener('click',stopTimeline);
+
+$('#line').addEventListener('input',function(){ if(!running)drawStatic(); });
+$('#sub').addEventListener('input',function(){ if(!running)drawStatic(); });
+
+function segWire(id,apply){
+  var seg=$(id);
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    Array.prototype.forEach.call(seg.querySelectorAll('button'),function(x){x.classList.remove('on');});
+    b.classList.add('on'); apply(b); if(!running)drawStatic();
+  });
+}
+segWire('#fmt',function(b){
+  cfg.W=+b.getAttribute('data-w'); cfg.H=+b.getAttribute('data-h');
+  C.width=cfg.W; C.height=cfg.H;
+  if($('#result').classList.contains('on')){ /* keep previous result */ }
+});
+segWire('#dur',function(b){ cfg.dur=+b.getAttribute('data-d'); });
+
+/* ---------- ticker ---------- */
+(function(){
+  var phrases=['WE WATCH','WE TRACK','WE RECORD','WE NEVER STOP','BIG BROTHER IS WATCHING YOU','NO PERMISSION REQUIRED','YOUR FILE IS OPEN'];
+  var s='';
+  for(var k=0;k<2;k++)for(var i=0;i<phrases.length;i++)s+=phrases[i]+'<i>◆</i>';
+  $('#tickrow').innerHTML=s;
+})();
+
+/* ---------- boot: draw once fonts are ready ---------- */
+function boot(){ readCfg(); drawStatic(); }
+if(document.fonts && document.fonts.ready){
+  // draw immediately (fallback font), then redraw when the display face loads
+  boot();
+  document.fonts.load('400 80px "Archivo Black"').then(function(){ if(!running)drawStatic(); })['catch'](function(){});
+  document.fonts.ready.then(function(){ if(!running)drawStatic(); });
+} else { boot(); }
+
+if(!canRecord()){
+  $('#note').innerHTML='<b>This browser can\u2019t record directly.</b> Hit Preview and screen-record the frame (iPhone: Control Center → Screen Recording; Mac: Shift-Cmd-5). For one-click download, open this in <b>Chrome or Edge</b> on desktop.';
+}
+})();
+</script>
+</body>
+</html>
