@@ -3,11 +3,16 @@
 // Price from the token endpoint (unambiguous); 24h change from the token's top
 // pool where BIGBROTHER is the base token. Attribution: data by CoinGecko.
 
+import tokenConfig from '../token-config.json' with { type: 'json' };
+
 const GT_NETWORK = 'robinhood';
-const BB_TOKEN = '0x41bad95fd76dc3148e36cec38948688ffc1a1e18';
+const BB_TOKEN = (tokenConfig.ca || '').trim();
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=90');
+  if (!BB_TOKEN) {
+    return res.status(200).json({ live: false });
+  }
   const H = { Accept: 'application/json' };
   let price = null,
     changePct = null,
