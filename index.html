@@ -247,6 +247,7 @@ textarea::placeholder{color:rgba(242,230,205,.3)}
 /* ---------- acquire ---------- */
 .ca{display:flex;gap:0;border:1px solid var(--rule);align-items:stretch;margin:18px 0 26px;flex-wrap:wrap}
 .ca code{flex:1;min-width:220px;padding:14px 16px;font-size:12.5px;color:var(--olive);overflow:auto;white-space:nowrap}
+.ca code.withheld{color:rgba(242,230,205,.6);letter-spacing:.12em}
 .ca button{border:0;border-left:1px solid var(--rule);background:var(--cream);color:var(--ink);padding:14px 20px;
   font-size:10px;letter-spacing:.2em;transition:background .18s,color .18s}
 .ca button:hover{background:var(--red);color:var(--cream)}
@@ -446,7 +447,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
     <div class="pair">PAIRED WITH <em>PLTR</em></div>
     <div class="bbprice" id="bbprice" style="display:none"><span class="bbk">$BIGBROTHER MARKET CAP</span> <b id="bbpriceval">—</b></div>
     <div class="cta">
-      <a class="btn solid" href="https://meta.matcha.xyz/robinhood?buyToken=0x41bad95fd76dc3148e36cec38948688ffc1a1e18&amp;chainId=4663&amp;sellToken=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" target="_blank" rel="noopener">Buy $BIGBROTHER</a>
+      <a class="btn solid" id="buybb" href="#" target="_blank" rel="noopener" style="display:none">Buy $BIGBROTHER</a>
       <a class="btn" href="#acquire">How to buy</a>
       <a class="btn" href="#file">Open your file</a>
     </div>
@@ -587,12 +588,12 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
     <span class="meta">ON ROBINHOOD CHAIN</span>
   </div>
   <div class="ca">
-    <code id="cacode">0x41bad95fd76dc3148e36cec38948688ffc1a1e18</code>
+    <code id="cacode" class="withheld">WITHHELD — AWAITING OFFICIAL ISSUE</code>
     <button id="copyca">Copy address</button>
   </div>
-  <div class="cabtns">
-    <a class="tradebtn" href="https://meta.matcha.xyz/robinhood?buyToken=0x41bad95fd76dc3148e36cec38948688ffc1a1e18&amp;chainId=4663&amp;sellToken=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" target="_blank" rel="noopener">Buy $BIGBROTHER on Matcha</a>
-    <a class="explorerbtn" href="https://robinhoodchain.blockscout.com/token/0x41bad95fd76dc3148e36cec38948688ffc1a1e18" target="_blank" rel="noopener">View contract on the Robinhood Chain explorer</a>
+  <div class="cabtns" id="cabtns" style="display:none">
+    <a class="tradebtn" id="tradebtn" href="#" target="_blank" rel="noopener">Buy $BIGBROTHER on Matcha</a>
+    <a class="explorerbtn" id="explorerbtn" href="#" target="_blank" rel="noopener">View contract on the Robinhood Chain explorer</a>
   </div>
   <div class="steps">
     <div class="step"><div class="sn">STEP ONE</div><h3>Get a wallet</h3><p>Robinhood Wallet adds the network for you. Any EVM wallet works too — add Robinhood Chain manually with chain ID 4663, gas paid in ETH.</p></div>
@@ -1162,6 +1163,11 @@ Array.prototype.slice.call(document.querySelectorAll('.blk')).forEach(function(b
 
 /* ============ copy contract ============ */
 $('#copyca').addEventListener('click',function(){
+  if($('#cacode').classList.contains('withheld')){
+    toast('NOTHING TO COPY','The record is sealed. The address will appear here when it is issued.');
+    log('Copy attempted. No address on file.');
+    return;
+  }
   var t=$('#cacode').textContent.trim();
   function after(){$('#copyca').textContent='Copied';setTimeout(function(){$('#copyca').textContent='Copy address'},1800);
     log('Contract address copied to clipboard.');toast('COPIED','Address on your clipboard. Verify every character before you swap.')}
@@ -1175,7 +1181,7 @@ Array.prototype.slice.call(document.querySelectorAll('[data-x]')).forEach(functi
 
 /* ============ ticker ============ */
 (function(){
-  var phrases=['WE WATCH','WE TRACK','WE RECORD','WE NEVER STOP','NO PERMISSION REQUIRED','$BIGBROTHER / PLTR','YOUR FILE IS OPEN','1,000,000,000 SUPPLY · EVERY UNIT NUMBERED'];
+  var phrases=['WE WATCH','WE TRACK','WE RECORD','WE NEVER STOP','BIG BROTHER IS WATCHING YOU','NO PERMISSION REQUIRED','YOUR FILE IS OPEN'];
   var s='';
   for(var k=0;k<2;k++)for(var i=0;i<phrases.length;i++)s+=phrases[i]+'<i>◆</i>';
   $('#tickrow').innerHTML=s;
@@ -1397,7 +1403,7 @@ function renderCard(){
     x.fillText(val,px+300,fy);
     fy+=50; x.strokeStyle='rgba(242,230,205,.08)'; x.beginPath(); x.moveTo(px+34,fy-24); x.lineTo(px+pw-34,fy-24); x.stroke();
   }
-  var CA=(document.getElementById('cacode')&&document.getElementById('cacode').textContent.trim())||'0x41bad95fd76dc3148e36cec38948688ffc1a1e18';
+  var CA=(window.BB_CA&&window.BB_CA.trim())||'WITHHELD — AWAITING OFFICIAL ISSUE';
   var HANDLE='@BigBrotherOnRH', SITE='bigbrother1984.com';
   var by=py+ph+40;
   x.strokeStyle='rgba(242,230,205,.14)'; x.lineWidth=1; x.beginPath(); x.moveTo(70,by-16); x.lineTo(W-70,by-16); x.stroke();
@@ -1555,9 +1561,26 @@ function svIndexInit(){ pltrRender(); pltrFetch(); setInterval(function(){ if(!d
   var ib=document.getElementById('issuebtn'); if(ib)ib.addEventListener('click',issueDossier);
   try{ memInit(); }catch(e){}
   try{ svIndexInit(); }catch(e){}
-  try{ bbInit(); }catch(e){}
   try{ feedInit(); }catch(e){}
 })();
+
+/* ============ token config — single source of truth for the CA ============ */
+window.BB_CA='';
+function goLive(ca){
+  window.BB_CA=ca;
+  var buy='https://meta.matcha.xyz/robinhood?buyToken='+ca+'&chainId=4663&sellToken=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+  var cc=document.getElementById('cacode');
+  if(cc){cc.textContent=ca;cc.classList.remove('withheld');}
+  var hb=document.getElementById('buybb');
+  if(hb){hb.href=buy;hb.style.display='';}
+  var tb=document.getElementById('tradebtn'); if(tb)tb.href=buy;
+  var eb=document.getElementById('explorerbtn'); if(eb)eb.href='https://robinhoodchain.blockscout.com/token/'+ca;
+  var cb=document.getElementById('cabtns'); if(cb)cb.style.display='';
+  try{ bbInit(); }catch(e){}
+}
+fetchJSON('/token-config.json',5000).then(function(j){
+  if(j&&typeof j.ca==='string'&&/^0x[0-9a-fA-F]{40}$/.test(j.ca.trim()))goLive(j.ca.trim());
+})['catch'](function(){});
 
 /* ============ boot ============ */
 var bootEl=$('#boot'),b1=$('#b1'),bbar=$('#bbar');
