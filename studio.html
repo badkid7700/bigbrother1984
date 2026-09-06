@@ -81,6 +81,15 @@ canvas{display:block;max-width:100%;max-height:74vh;height:auto;width:auto}
 .recdot.on{display:flex}
 @keyframes bl{0%,45%{opacity:1}50%,100%{opacity:.15}}
 
+.recbar{position:absolute;left:0;right:0;bottom:0;display:none;align-items:center;gap:12px;padding:12px 14px;
+  background:rgba(58,6,3,.92);border-top:1px solid var(--red);z-index:3}
+.recbar.on{display:flex}
+.recbar .lbl{display:flex;align-items:center;gap:8px;color:var(--cream);font-family:var(--display);font-size:12px;letter-spacing:.14em}
+.recbar .lbl i{width:10px;height:10px;border-radius:50%;background:var(--red);animation:bl .9s infinite}
+.recbar .track{flex:1;height:6px;background:rgba(242,230,205,.15);overflow:hidden}
+.recbar .fill{display:block;height:100%;width:0;background:var(--red)}
+.recbar .tm{color:rgba(242,230,205,.7);font-size:12px;letter-spacing:.08em;font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+
 .result{margin-top:14px;border:1px solid var(--rule);background:var(--ink-2);display:none}
 .result.on{display:block}
 .result .ph{padding:9px 14px;border-bottom:1px solid var(--rule);font-size:10px;letter-spacing:.2em;color:rgba(242,230,205,.55);display:flex;align-items:center;gap:10px}
@@ -158,10 +167,7 @@ canvas{display:block;max-width:100%;max-height:74vh;height:auto;width:auto}
 
       <div class="status" id="status">Ready. Preview it, then record.</div>
 
-      <div class="note" id="note">
-        <b>Audio is baked in</b> — the surveillance drone records with the video. Use headphones to hear the preview.<br><br>
-        X and TikTok need <b>MP4</b>. Safari (incl. iPhone) and newer Chrome/Edge export MP4 directly; if a clip downloads as <b>.webm</b>, convert it before posting — the clip card tells you which you got. If your browser can't record at all, hit Preview and screen-record instead.
-      </div>
+      <div class="note" id="note" style="display:none"></div>
     </div>
   </div>
 
@@ -170,6 +176,11 @@ canvas{display:block;max-width:100%;max-height:74vh;height:auto;width:auto}
     <div class="canvas-hold">
       <canvas id="c" width="1080" height="1920"></canvas>
       <span class="recdot" id="recdot"><i></i>REC</span>
+      <div class="recbar" id="recbar">
+        <span class="lbl"><i></i>RECORDING</span>
+        <span class="track"><span class="fill" id="recfill"></span></span>
+        <span class="tm" id="rectime">0.0s</span>
+      </div>
     </div>
 
     <div class="result" id="result">
@@ -474,6 +485,10 @@ function loop(){
     return;
   }
   frame(tp);
+  if(mode==='record'){
+    $('#recfill').style.width=(tp*100).toFixed(1)+'%';
+    $('#rectime').textContent=Math.max(0,cfg.dur*(1-tp)).toFixed(1)+'s';
+  }
   // audio cues
   if(actx){
     // geiger, denser during intro scan
@@ -487,7 +502,7 @@ function loop(){
 function stopTimeline(){
   running=false; if(raf)cancelAnimationFrame(raf); raf=null;
   if(mode==='record' && rec && rec.state!=='inactive'){ try{rec.stop();}catch(e){} }
-  mode='idle'; setButtons(); $('#recdot').classList.remove('on');
+  mode='idle'; setButtons(); $('#recdot').classList.remove('on'); $('#recbar').classList.remove('on');
   drawStatic();
   setStatus('Ready. Preview it, then record.');
 }
@@ -521,6 +536,9 @@ function startRecord(){
   rec.onstop=finishRecord;
   rec.start();
   $('#recdot').classList.add('on');
+  $('#recbar').classList.add('on');
+  $('#recfill').style.width='0%';
+  $('#rectime').textContent=cfg.dur.toFixed(1)+'s';
   setStatus('Recording '+cfg.dur+'s… hold on.');
   runTimeline(true);
 }
@@ -531,6 +549,7 @@ function finishRecordSoon(){
 }
 function finishRecord(){
   $('#recdot').classList.remove('on');
+  $('#recbar').classList.remove('on');
   try{ if(streamDest){ master.disconnect(streamDest); streamDest=null; } }catch(e){}
   mode='idle'; setButtons();
   if(!chunks.length){ setStatus('Nothing captured — try Preview + screen-record.',true); return; }
@@ -624,6 +643,7 @@ if(document.fonts && document.fonts.ready){
 
 if(!canRecord()){
   $('#note').innerHTML='<b>This browser can\u2019t record directly.</b> Hit Preview and screen-record the frame (iPhone: Control Center → Screen Recording; Mac: Shift-Cmd-5). For one-click download, open this in <b>Chrome or Edge</b> on desktop.';
+  $('#note').style.display='';
 }
 })();
 </script>
