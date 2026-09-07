@@ -646,6 +646,33 @@ if(!canRecord()){
   $('#note').style.display='';
 }
 })();
+
+/* Invisible hooks for the local Operations Desk (no visible UI change).
+   Only honored when embedded in a same-origin frame. */
+window.addEventListener('message',function(e){
+  if(e.origin!==location.origin||!e.data||typeof e.data!=='object')return;
+  if(e.data.type==='bb-set-text'){
+    var line=document.getElementById('line');
+    if(line&&typeof e.data.text==='string'){
+      line.value=e.data.text.slice(0,140);
+      line.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    if(typeof e.data.sub==='string'){
+      var sub=document.getElementById('sub');
+      if(sub){sub.value=e.data.sub.slice(0,60);sub.dispatchEvent(new Event('input',{bubbles:true}));}
+    }
+  }else if(e.data.type==='bb-export-still'){
+    var c=document.getElementById('c');
+    if(c&&c.toBlob)c.toBlob(function(blob){
+      if(!blob)return;
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='bigbrother-still.png';
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+    },'image/png');
+  }
+});
 </script>
 </body>
 </html>
