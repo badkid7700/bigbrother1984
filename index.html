@@ -613,7 +613,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
 <footer>
   <div class="flinks">
     <a href="#file">Your file</a><a href="#classified">Supply</a><a href="#acquire">Acquire</a><a href="/studio">Ministry of Truth</a>
-    <a href="https://x.com/BigBrotherOnRH" target="_blank" rel="noopener">X / Twitter</a><a href="#" data-x>Telegram</a><a href="#" data-x>Chart</a>
+    <a href="https://x.com/BigBrotherOnRH" target="_blank" rel="noopener">X / Twitter</a><a href="https://dexscreener.com/robinhood/0x06442c988849df4990129c0fa8eaa161b704bd4a2a405fae9d1ab63b00634e61" target="_blank" rel="noopener">Chart</a>
   </div>
   <div class="disc">
     <p>$BIGBROTHER is a meme token. It has no intrinsic value, no utility, no revenue, no team obligation to you, and no expectation of financial return. You can lose everything you put in. Nothing on this page is financial advice.</p>
@@ -1178,10 +1178,6 @@ $('#copyca').addEventListener('click',function(){
   else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
     try{document.execCommand('copy')}catch(e){}ta.remove();after()}
 });
-Array.prototype.slice.call(document.querySelectorAll('[data-x]')).forEach(function(a){
-  a.addEventListener('click',function(e){e.preventDefault();toast('NOT YET','This channel has not been activated. You will be informed when we decide you should be.')});
-});
-
 /* ============ ticker ============ */
 (function(){
   var phrases=['WE WATCH','WE TRACK','WE RECORD','WE NEVER STOP','BIG BROTHER IS WATCHING YOU','NO PERMISSION REQUIRED','YOUR FILE IS OPEN'];
