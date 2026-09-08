@@ -108,7 +108,8 @@ nav .rec i{width:7px;height:7px;border-radius:50%;background:var(--red);animatio
 .pair{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:7px 14px;
   border:1px solid rgba(242,230,205,.4);font-size:11px;letter-spacing:.18em}
 .pair em{font-style:normal;color:var(--ink);background:var(--cream);padding:1px 6px}
-.bbprice{display:inline-flex;align-items:baseline;gap:9px;margin-top:12px;padding:7px 14px;border:1px solid rgba(242,230,205,.35);font-size:12px;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.bbprice{display:inline-flex;align-items:baseline;gap:9px;margin-top:12px;padding:7px 14px;border:1px solid rgba(242,230,205,.35);font-size:12px;letter-spacing:.06em;font-variant-numeric:tabular-nums;text-decoration:none;color:inherit;transition:border-color .15s,background .15s}
+a.bbprice:hover{border-color:var(--cream);background:rgba(242,230,205,.07)}
 .bbprice .bbk{font-size:10px;letter-spacing:.18em;color:rgba(242,230,205,.72)}
 .bbprice b{color:var(--cream);font-weight:600;font-size:14px}
 .bbprice .bbchg{font-size:11px;color:rgba(242,230,205,.7)}
@@ -447,7 +448,7 @@ footer .disc{max-width:80ch;line-height:1.75;border-top:1px solid var(--rule-sof
     <h1><span>Big</span><span>Brother</span></h1>
     <p class="tag"><b>Big Brother is watching you.</b><br>The surveillance state doesn't need your permission.</p>
     <div class="pair">PAIRED WITH <em>PLTR</em></div>
-    <div class="bbprice" id="bbprice" style="display:none"><span class="bbk">$BIGBROTHER MARKET CAP</span> <b id="bbpriceval">—</b></div>
+    <a class="bbprice" id="bbprice" style="display:none" href="https://dexscreener.com/robinhood/0x06442c988849df4990129c0fa8eaa161b704bd4a2a405fae9d1ab63b00634e61" target="_blank" rel="noopener" title="View the chart"><span class="bbk">$BIGBROTHER MARKET CAP</span> <b id="bbpriceval">—</b></a>
     <div class="cta">
       <a class="btn solid" id="buybb" href="#" target="_blank" rel="noopener" style="display:none">Buy $BIGBROTHER</a>
       <a class="btn" href="#acquire">How to buy</a>
